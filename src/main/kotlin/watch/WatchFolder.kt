@@ -48,7 +48,7 @@ class WatchFolder(private val listener: OnCompletedCalculatorListener) {
                             listener.onComplete(Path.of(path.absolutePathString() + File.separator + fileName.name))
                             println(Path.of(path.absolutePathString() + File.separator + fileName.name).toString())
                         }
-                        println("A NEW FILE IS CREATED: $fileName")
+                        println("A NEW FILE WAS CREATED: $fileName")
                     }
 
                     if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
@@ -58,7 +58,7 @@ class WatchFolder(private val listener: OnCompletedCalculatorListener) {
                             listener.onComplete(Path.of(path.absolutePathString() + File.separator + fileName.name))
                             println(Path.of(path.absolutePathString() + File.separator + fileName.name).toString())
                         }
-                        println("A NEW FILE IS MODIFIED: $fileName")
+                        println("A NEW FILE WAS MODIFIED: $fileName")
                     }
 
                 }

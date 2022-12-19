@@ -13,12 +13,12 @@ import kotlin.concurrent.thread
 
 fun main(args: Array<String>) {
 
-    val server : ServerSocket = ServerSocket(Server.SERVER_PORT_3)
+    val server = ServerSocket(Server.SERVER_PORT_1)
     println("Waiting connection")
     val socket = server.accept();
     println("The client has connected successfully")
 
-    val destPath = "files/${Server.SERVER_PORT_3}/zip"
+    val destPath = "files/${Server.SERVER_PORT_1}/zip"
 
     try {
         val objectAsByte = ByteArray(socket.receiveBufferSize)
@@ -33,12 +33,12 @@ fun main(args: Array<String>) {
             println(tempFile.absolutePath)
             tempFile.mkdirs()
         }
-        println("Writing file at $dir")
+        println("-----> Writing file at $dir")
 
         val fos = FileOutputStream(dir)
         fos.write(file.content)
         fos.close()
-        println("All file was successfully written")
+        println("-----> All file was successfully written")
         unzipAndRunProgram(socket, file.name)
     }catch (e: Exception){
         e.printStackTrace()
@@ -68,8 +68,8 @@ private fun getObjectFromByte(objectAsByte: ByteArray): Any? {
 }
 
 fun unzipAndRunProgram(socket: Socket, fileName: String) {
-    val filePath = "files/${Server.SERVER_PORT_3}/zip/${fileName}"
-    val destPath = "files/${Server.SERVER_PORT_3}/output_zip_files"
+    val filePath = "files/${Server.SERVER_PORT_1}/zip/${fileName}"
+    val destPath = "files/${Server.SERVER_PORT_1}/output_zip_files"
     val destPathResult = destPath + File.separator + "results"
 
     if (!File(destPathResult).exists()) {
@@ -122,6 +122,7 @@ fun unzipAndRunProgram(socket: Socket, fileName: String) {
 private fun sendFileToClient(bf: BufferedOutputStream?, fileToSend: CustomFile) {
     val bytea: ByteArray? = serializeFile(fileToSend)
     bytea?.let {
+        println("-----> SENDING FILE ${fileToSend.name} TO CLIENT")
         bf!!.write(it)
         bf.flush()
         //bf!!.close()

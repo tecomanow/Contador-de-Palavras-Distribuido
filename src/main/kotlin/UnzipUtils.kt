@@ -34,7 +34,7 @@ class UnzipUtils {
 
                 val filePath: String = destPath + File.separator + entry.name
 
-                println("Descompactando para ${File(filePath).absolutePath}")
+                println("-----> UNZIPPING ${entry.name} TO ${File(filePath).absolutePath}")
 
                 if(!entry.isDirectory){
                     extractFile(zipIn, filePath)
@@ -45,9 +45,12 @@ class UnzipUtils {
                 zipIn.closeEntry()
                 entry = zipIn.nextEntry
             }
+
+            println("-----> FILE EXTRACTED")
+
         }catch (e: Exception){
             e.printStackTrace()
-            println("Algo deu errado: ${e.message}")
+            println("Something went wrong: ${e.message}")
         }
     }
 
@@ -64,10 +67,6 @@ class UnzipUtils {
             }while (read > 0)
 
             bos.close()
-
-            if(filePath.contains("program.exe")){
-                //println("CONTEM O PROGRAMA EXE: ${File(filePath).absoluteFile}")
-            }
 
         }catch (e: Exception){
             e.printStackTrace()

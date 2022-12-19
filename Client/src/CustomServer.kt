@@ -12,6 +12,7 @@ class CustomServer {
 
             @Synchronized
             fun updateOccurrence(value: Int, dir: String){
+                println("-----> UPDATING VALUE IN FILE")
                 val f = File(dir)
                 val fw = FileWriter(f)
                 val bw = BufferedWriter(fw)
@@ -27,7 +28,9 @@ class CustomServer {
 
         //val control = Control()
 
-        private val DEST_RESULT_PATH = "files/results"
+        companion object{
+            private const val DEST_RESULT_PATH = "files/results"
+        }
 
         private var socket: Socket? = null
         private var path: Path? = null
@@ -39,11 +42,13 @@ class CustomServer {
             try {
                 socket = Socket(ip, port)
                 socket?.let { s ->
-                    bf = BufferedOutputStream(socket!!.getOutputStream())
+                    bf = BufferedOutputStream(s.getOutputStream())
+                    println("-----> Connected to $ip:$port")
                     return true
                 }
             } catch (e: ConnectException) {
-                e.printStackTrace()
+                //e.printStackTrace()
+                println("-----> Not possible connect to $ip:$port")
             }
             return false;
         }
@@ -76,6 +81,7 @@ class CustomServer {
         private fun sendFileToServer() {
             val bytea: ByteArray? = serializeFile()
             bytea?.let {
+                println("-----> SENDING FILE ${fileToSend?.name} TO SERVER")
                 bf!!.write(it)
                 bf!!.flush()
                 //bf!!.close()
@@ -99,59 +105,61 @@ class CustomServer {
 
         override fun run() {
 
-            try {
-                println("Waiting return from the server")
+            /*try {
 
-                do {
 
-                    val objectAsByte = ByteArray(socket!!.receiveBufferSize)
-                    val bf = BufferedInputStream(socket!!.getInputStream())
-                    bf.read(objectAsByte)
 
-                    resultFile = getObjectFromByte(objectAsByte) as CustomFile?
-
-                } while (resultFile == null)
-
-                resultFile?.let { it ->
-
-                    val dir = DEST_RESULT_PATH + File.separator + it.name;
-                    val tempFile = File(DEST_RESULT_PATH)
-                    var lastResult: Int = 0
-
-                    if(!tempFile.exists()){
-                        tempFile.mkdirs()
-                    }else{
-                        val result = Files.readAllLines(Path.of(dir))
-                        result.forEach {
-                            println("LAST RESULT: " + it.toInt())
-                            lastResult = it.toInt()
-                        }
-                    }
-
-                    println("Writing file at $dir")
-
-                    val fos = FileOutputStream(dir)
-                    fos.write(it.content)
-                    fos.close()
-                    println("All file was successfully written")
-
-                    val finalFile = Files.readAllLines(Path.of(dir))
-                    println("One server count $finalFile occurrence in the file")
-                    finalFile.forEach { f ->
-                        if(f.isNotEmpty()){
-                            val currentResult = f.toInt()
-                            val total = lastResult + currentResult
-                            //val newFos = FileOutputStream(dir)
-                            Control.updateOccurrence(total, dir)
-                        }else{
-                            println("VAZIO")
-                        }
-                    }
-                }
 
             }catch (e: Exception){
                 println("Something went wrong")
                 e.printStackTrace()
+            }*/
+
+            println("-----> Waiting return from the server")
+
+            do {
+
+                val objectAsByte = ByteArray(socket!!.receiveBufferSize)
+                val bf = BufferedInputStream(socket!!.getInputStream())
+                bf.read(objectAsByte)
+
+                resultFile = getObjectFromByte(objectAsByte) as CustomFile?
+
+            } while (resultFile == null)
+
+            resultFile?.let { it ->
+
+                val dir = DEST_RESULT_PATH + File.separator + it.name;
+                val tempFile = File(DEST_RESULT_PATH)
+                var lastResult: Int = 0
+
+                if(!tempFile.exists()){
+                    tempFile.mkdirs()
+                }else{
+                    val result = Files.readAllLines(Path.of(dir))
+                    result.forEach {
+                        println("LAST RESULT: " + it.toInt())
+                        lastResult = it.toInt()
+                    }
+                }
+
+                println("-----> Writing file at $dir")
+
+                val fos = FileOutputStream(dir)
+                fos.write(it.content)
+                fos.close()
+                println("-----> All file was successfully written")
+
+                val finalFile = Files.readAllLines(Path.of(dir))
+                println("-----> One server count $finalFile occurrence in the file")
+                finalFile.forEach { f ->
+                    if(f.isNotEmpty()){
+                        val currentResult = f.toInt()
+                        val total = lastResult + currentResult
+                        //val newFos = FileOutputStream(dir)
+                        Control.updateOccurrence(total, dir)
+                    }
+                }
             }
 
         }
