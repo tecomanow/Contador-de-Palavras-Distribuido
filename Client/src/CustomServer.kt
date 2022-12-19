@@ -125,7 +125,7 @@ class CustomServer {
 
                 resultFile = getObjectFromByte(objectAsByte) as CustomFile?
 
-            } while (resultFile == null)
+            } while (resultFile?.content == null)
 
             resultFile?.let { it ->
 
@@ -151,14 +151,18 @@ class CustomServer {
                 println("-----> All file was successfully written")
 
                 val finalFile = Files.readAllLines(Path.of(dir))
-                println("-----> One server count $finalFile occurrence in the file")
-                finalFile.forEach { f ->
-                    if(f.isNotEmpty()){
-                        val currentResult = f.toInt()
-                        val total = lastResult + currentResult
-                        //val newFos = FileOutputStream(dir)
-                        Control.updateOccurrence(total, dir)
+                if(finalFile.isNotEmpty()){
+                    println("-----> One server count $finalFile occurrence in the file")
+                    finalFile.forEach { f ->
+                        if(f.isNotEmpty()){
+                            val currentResult = f.toInt()
+                            val total = lastResult + currentResult
+                            //val newFos = FileOutputStream(dir)
+                            Control.updateOccurrence(total, dir)
+                        }
                     }
+                }else{
+                    println("-----> One server can't count occurrence in the file")
                 }
             }
 

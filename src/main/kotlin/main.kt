@@ -13,12 +13,12 @@ import kotlin.concurrent.thread
 
 fun main(args: Array<String>) {
 
-    val server = ServerSocket(Server.SERVER_PORT_1)
+    val server = ServerSocket(Server.SERVER_PORT_2)
     println("Waiting connection")
     val socket = server.accept();
     println("The client has connected successfully")
 
-    val destPath = "files/${Server.SERVER_PORT_1}/zip"
+    val destPath = "files/${Server.SERVER_PORT_2}/zip"
 
     try {
         val objectAsByte = ByteArray(socket.receiveBufferSize)
@@ -68,8 +68,8 @@ private fun getObjectFromByte(objectAsByte: ByteArray): Any? {
 }
 
 fun unzipAndRunProgram(socket: Socket, fileName: String) {
-    val filePath = "files/${Server.SERVER_PORT_1}/zip/${fileName}"
-    val destPath = "files/${Server.SERVER_PORT_1}/output_zip_files"
+    val filePath = "files/${Server.SERVER_PORT_2}/zip/${fileName}"
+    val destPath = "files/${Server.SERVER_PORT_2}/output_zip_files"
     val destPathResult = destPath + File.separator + "results"
 
     if (!File(destPathResult).exists()) {
