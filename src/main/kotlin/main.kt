@@ -106,17 +106,11 @@ fun unzipAndRunProgram(socket: Socket, fileName: String) {
     thread {
         wf.watchFolder(destPathResult)
     }
-    /*val executor: ExecutorService = Executors.newCachedThreadPool()
-    executor.submit(WatchCallable(destPathResult))*/
-
-    //Thread.sleep(2000)
 
     val unzipUtils = UnzipUtils()
     unzipUtils.unzip(filePath, destPath)
 
-    //val builder: ProcessBuilder()
     val p: Process = Runtime.getRuntime().exec("cmd /c cd ${File(destPath).absolutePath} & program.exe")
-    //println("cmd ${File(destPath).absolutePath}")
 }
 
 private fun sendFileToClient(bf: BufferedOutputStream?, fileToSend: CustomFile) {

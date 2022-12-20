@@ -2,9 +2,11 @@ package watch
 
 import callback.OnCompletedCalculatorListener
 import java.io.File
+import java.net.URI
 import java.nio.file.*
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.name
+import java.nio.file.Path.*
 
 class WatchFolder(private val listener: OnCompletedCalculatorListener) {
 
@@ -13,7 +15,7 @@ class WatchFolder(private val listener: OnCompletedCalculatorListener) {
 
     fun watchFolder(folderPath: String) {
 
-        val path = Path.of(folderPath)
+        val path = Paths.get(folderPath)
         println(path.absolutePathString())
 
         try {
@@ -45,8 +47,8 @@ class WatchFolder(private val listener: OnCompletedCalculatorListener) {
                         if(fileName.name == "resultado.txt"){
                             //println("PROGRAMA P/ EXECUTAR")
                             isResultFound = true;
-                            listener.onComplete(Path.of(path.absolutePathString() + File.separator + fileName.name))
-                            println(Path.of(path.absolutePathString() + File.separator + fileName.name).toString())
+                            listener.onComplete(Paths.get(path.absolutePathString() + File.separator + fileName.name))
+                            println(Paths.get(path.absolutePathString() + File.separator + fileName.name).toString())
                         }
                         println("A NEW FILE WAS CREATED: $fileName")
                     }
@@ -55,8 +57,8 @@ class WatchFolder(private val listener: OnCompletedCalculatorListener) {
                         if(fileName.name == "resultado.txt"){
                             //println("PROGRAMA P/ EXECUTAR")
                             isResultFound = true;
-                            listener.onComplete(Path.of(path.absolutePathString() + File.separator + fileName.name))
-                            println(Path.of(path.absolutePathString() + File.separator + fileName.name).toString())
+                            listener.onComplete(Paths.get(path.absolutePathString() + File.separator + fileName.name))
+                            println(Paths.get(path.absolutePathString() + File.separator + fileName.name).toString())
                         }
                         println("A NEW FILE WAS MODIFIED: $fileName")
                     }
